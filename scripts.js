@@ -18,6 +18,6 @@ function mostrarLista()
 {
     document.getElementById('lista').innerHTML = "";
     for (let index = 0; index < itemList.length; index++) {
-        document.getElementById('lista').innerHTML += '<li></li>';
+        document.getElementById('lista').innerHTML += `<li id="${itemList[index].id}">${itemList[index].titulo} <button onclick = "borrarItem"></button></li>`;
     }
 }
