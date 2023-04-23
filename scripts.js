@@ -2,28 +2,39 @@ let itemList = [];
 let idUnico = 0;
 
 function agregarItem() {
-    const i = {
-        id: idUnico,
-        titulo: document.getElementById('task').value,
-        hecho: false,
-        fechaCreacion: Date.now(),
-        fechaHecho: null
+    const input = document.getElementById('task').value;
+    if (input) {
+        const i = {
+            id: idUnico,
+            titulo: document.getElementById('task').value,
+            hecho: false,
+            fechaCreacion: Date.now(),
+            fechaHecho: null
+        }
+        idUnico++;
+        itemList.push(i);
+        item = crearItem(i);
+        document.getElementById('lista').appendChild(item);
+        actualizarLista();
+    } else {
+        alert("Ingrese una tarea válida.");
     }
-    idUnico++;
-    itemList.push(i);
-    mostrarLista();
 }
 
-function mostrarLista() {
-    document.getElementById('lista').innerHTML = "";
+function crearItem(i){
+    const item = document.createElement("label");
+    item.setAttribute("class", "list-group-item p-1 mx-auto w-50");
+    item.setAttribute("style", "padding:0%; margin-bottom:0%;");
+    item.setAttribute("id", `${i.id}`);
+    item.innerHTML = `<div class="cont"><input type="checkbox" class="form-check-input mt-0 mx-2" id="${i.id}cb" onclick="tacharItem(${i.id})"></input>
+    <span id="${i.id}sp">${i.titulo}</span></div>
+    <button id="${i.id}btn" class="btn btn-danger" onclick="borrarItem(${i.id})">X</button>`;
+    return item;
+}
+
+function actualizarLista() {
     for (let index = 0; index < itemList.length; index++) {
-        document.getElementById('lista').innerHTML += `<label class="list-group-item p-1 mx-auto w-50" style="padding:0%; margin-bottom:50%:" id="${itemList[index].id}">
-        <div class="cont"><input type="checkbox" class="form-check-input mt-0 mx-2" id="${itemList[index].id}cb" onclick="tacharItem(${itemList[index].id})"></input>
-        <span id="${itemList[index].id}sp">${itemList[index].titulo}</span></div>
-        <button id="${itemList[index].id}btn" class="btn btn-danger" onclick="borrarItem(${itemList[index].id})">X</button>
-        </label>`;
         if (itemList[index].hecho) {
-            itemList[index].fechaHecho = Date.now();
             document.getElementById(`${itemList[index].id}sp`).style.textDecoration = "line-through";
             document.getElementById(`${itemList[index].id}sp`).setAttribute("class", "text-muted");
             document.getElementById(`${itemList[index].id}cb`).checked = true;
@@ -34,12 +45,13 @@ function mostrarLista() {
 
 function tacharItem(id) {
     const index = itemList.findIndex((item) => item.id == id);
+    itemList[index].fechaHecho = Date.now();
     itemList[index].hecho = true;
-    mostrarLista();
+    actualizarLista();
 }
 
 function borrarItem(id) {
     const index = itemList.findIndex((item) => item.id == id);
     itemList.splice(index, 1);
-    mostrarLista();
+    document.getElementById('lista').removeChild(document.getElementById(id));
 }
