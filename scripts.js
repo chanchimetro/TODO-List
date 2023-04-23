@@ -1,5 +1,7 @@
 let itemList = [];
 let idUnico = 0;
+let menorDuracion = 999999999999999;
+let tareaMasRapida = 'No completaste ninguna tarea.';
 
 function agregarItem() {
     const input = document.getElementById('task').value;
@@ -47,7 +49,15 @@ function tacharItem(id) {
     const index = itemList.findIndex((item) => item.id == id);
     itemList[index].fechaHecho = Date.now();
     itemList[index].hecho = true;
+    if((itemList[index].fechaHecho - itemList[index].fechaCreacion) < menorDuracion) {
+        menorDuracion = (itemList[index].fechaHecho - itemList[index].fechaCreacion);
+        tareaMasRapida = itemList[index].titulo;
+    }
     actualizarLista();
+}
+
+function mostrarTareaMasRapida(){
+    document.getElementById("tareaMasRapida").innerHTML = tareaMasRapida;
 }
 
 function borrarItem(id) {
